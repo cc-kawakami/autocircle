@@ -1,0 +1,15 @@
+version: 2.1
+orbs:
+  <%= "ruby: circleci/ruby@1.2.0" if ruby_used? %>
+  <%= "node: circleci/node@4.9.0" if node_used? %>
+  <%= "browser-tools: circleci/browser-tools@1.2.3" if browser %>
+jobs:
+  build:
+    docker:
+      - image: cimg/<%= main_lang %>:<%= main_lang_version %><%= variants.map { |v| "-#{v}" }.join %>
+    steps:
+      - checkout
+      <%= "- browser-tool/install-#{browser}" if browser %>
+      <%= "- ruby/install-deps" if ruby_used? %>
+      <%= "- node/install-packages:" if node_used? %>
+          <%= "pkg-manager: yarn" if node_used? %>
